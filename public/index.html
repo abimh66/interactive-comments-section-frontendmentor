@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="32x32"
+      href="./images/favicon-32x32.png"
+    />
+
+    <title>Frontend Mentor | Interactive comments section</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body class="bg-primary-lightBlue font-rubik">
+    <main class="flex flex-col gap-6 w-full p-9 sm:px-72">
+      <!-- First Level Comment-->
+      <div class="main-container flex flex-col gap-3">
+        <!-- Comment -->
+      </div>
+
+      <div class="relative flex flex-col gap-6 bg-white rounded-lg p-5">
+        <textarea
+          name="textComment"
+          id="comment"
+          cols="30"
+          rows="3"
+          placeholder="Add a comment..."
+          class="border-2 w-full border-neutral-grayBlue rounded-lg resize-none p-3"
+        ></textarea>
+        <img src="" alt="user image" class="w-10 h-10 img-current-user" />
+        <span
+          class="button-send absolute right-5 bottom-5 bg-primary-blue text-white px-5 py-2 w-max rounded-lg cursor-pointer"
+          >Send</span
+        >
+      </div>
+    </main>
+    <script type="module" src="script.js"></script>
+  </body>
+</html>

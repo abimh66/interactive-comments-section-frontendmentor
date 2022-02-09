@@ -1,10 +1,14 @@
 // "use strict";
+const body = document.querySelector("body");
 const mainContainer = document.querySelector(".main-container");
 const replySection = document.querySelector(".replySection");
 const imgCurrentUser = document.querySelector(".img-current-user");
 const btnSend = document.querySelector(".button-send");
 const commentArea = document.querySelector(".comment-area");
 const commentText = document.querySelector("#comment");
+const deleteModal = document.querySelector(".delete-modal");
+const btnCancel = document.querySelector(".button-cancel");
+const btnDelete = document.querySelector(".button-delete");
 let currentId = 5;
 
 const addContent = function (
@@ -55,14 +59,14 @@ const addContent = function (
         <div
           class="flex sm:flex-col items-center gap-5 sm:gap-3 py-3 px-4 sm:p-4 w-max sm:h-max bg-neutral-lightGray1 rounded-lg"
         >
-          <svg width="16" height="16" xmlns="http://www.w3.org/2000/svg" class="cursor-pointer sm:ml-[6px]">
+          <svg width="16" height="16" xmlns="http://www.w3.org/2000/svg" class="button-like cursor-pointer sm:ml-[6px]">
             <path
               d="M6.33 10.896c.137 0 .255-.05.354-.149.1-.1.149-.217.149-.354V7.004h3.315c.136 0 .254-.05.354-.149.099-.1.148-.217.148-.354V5.272a.483.483 0 0 0-.148-.354.483.483 0 0 0-.354-.149H6.833V1.4a.483.483 0 0 0-.149-.354.483.483 0 0 0-.354-.149H4.915a.483.483 0 0 0-.354.149c-.1.1-.149.217-.149.354v3.37H1.08a.483.483 0 0 0-.354.15c-.1.099-.149.217-.149.353v1.23c0 .136.05.254.149.353.1.1.217.149.354.149h3.333v3.39c0 .136.05.254.15.353.098.1.216.149.353.149H6.33Z"
               fill="#C5C6EF"
             />
           </svg>
           <span>${score}</span>
-          <svg width="16" height="4" xmlns="http://www.w3.org/2000/svg" class="cursor-pointer sm:ml-[6px]">
+          <svg width="16" height="4" xmlns="http://www.w3.org/2000/svg" class="button-dislike cursor-pointer sm:ml-[6px]">
             <path
               d="M9.256 2.66c.204 0 .38-.056.53-.167.148-.11.222-.243.222-.396V.722c0-.152-.074-.284-.223-.395a.859.859 0 0 0-.53-.167H.76a.859.859 0 0 0-.53.167C.083.437.009.57.009.722v1.375c0 .153.074.285.223.396a.859.859 0 0 0 .53.167h8.495Z"
               fill="#C5C6EF"
@@ -83,7 +87,7 @@ const addContent = function (
                 fill="#ED6368"
               />
             </svg>
-            <span class="show-button-delete text-red-500">Delete</span>
+            <span class="show-button-delete text-primary-softRed">Delete</span>
           </div>
           <div class="flex items-center gap-1 cursor-pointer">
             <svg width="14" height="14" xmlns="http://www.w3.org/2000/svg">
@@ -263,7 +267,7 @@ const showBtnReply = function () {
 };
 
 const showBtnEdit = function () {
-  // Show Btn Reply
+  // Show Btn Edit
   const btnsShowEdit = mainContainer.querySelectorAll(".show-button-edit");
   btnsShowEdit.forEach((btn) => {
     btn.addEventListener("click", function (e) {
@@ -336,6 +340,81 @@ const showBtnEdit = function () {
   });
 };
 
+const toggleModal = function () {
+  deleteModal.classList.toggle("hidden");
+  deleteModal.classList.toggle("grid");
+  body.classList.toggle("overflow-hidden");
+};
+
+const showBtnDelete = function () {
+  // Show Btn Delete
+  const btnsShowDelete = mainContainer.querySelectorAll(".show-button-delete");
+  btnsShowDelete.forEach((btn) => {
+    btn.addEventListener("click", function (e) {
+      const parent = e.target.closest(".content-container");
+
+      toggleModal();
+      btnCancel.addEventListener("click", toggleModal);
+      btnDelete.addEventListener("click", function (e) {
+        const idContent = +parent.dataset.idContent;
+        const contentAtId = +parent.dataset.contentAtId;
+
+        if (idContent == contentAtId) {
+          resultData.comments.forEach((c, index, arr) => {
+            if (c.id == idContent) {
+              arr.splice(index, 1);
+            }
+          });
+        } else {
+          resultData.comments.forEach((c) => {
+            if (c.id == contentAtId) {
+              c.replies.forEach((r, index, arr) => {
+                if (r.id == idContent) {
+                  arr.splice(index, 1);
+                }
+              });
+            }
+          });
+        }
+
+        //Update view (Delete child in main container, Then load again)
+        mainContainer.innerHTML = "";
+        initApp();
+
+        // CLose modal
+        toggleModal();
+      });
+    });
+  });
+};
+
+const sendComment = function () {
+  // Add Comment
+  btnSend.addEventListener("click", function () {
+    if (commentText.value === "") return;
+
+    const newComment = {
+      id: currentId,
+      content: comment.value,
+      createdAt: "today", //Need update
+      score: 0,
+      user: resultData.currentUser,
+      replies: [],
+    };
+
+    // Add new data to Data Object
+    resultData.comments.push(newComment);
+    currentId++;
+
+    //Delete child in main container, Then load again
+    mainContainer.innerHTML = "";
+    initApp();
+
+    //clear textarea
+    comment.value = "";
+  });
+};
+
 const showCurrentUser = function () {
   const { currentUser } = resultData;
   imgCurrentUser.src = currentUser.image.png;
@@ -347,31 +426,8 @@ const initApp = function () {
   showBtnReply();
   showCurrentUser();
   showBtnEdit();
+  showBtnDelete();
+  sendComment();
   commentArea.classList.remove("opacity-0");
 };
 initApp();
-
-// Add Comment
-btnSend.addEventListener("click", function () {
-  if (commentText.value === "") return;
-
-  const newComment = {
-    id: currentId,
-    content: comment.value,
-    createdAt: "today", //Need update
-    score: 0,
-    user: resultData.currentUser,
-    replies: [],
-  };
-
-  // Add new data to Data Object
-  resultData.comments.push(newComment);
-  currentId++;
-
-  //Delete child in main container, Then load again
-  mainContainer.innerHTML = "";
-  initApp();
-
-  //clear textarea
-  comment.value = "";
-});

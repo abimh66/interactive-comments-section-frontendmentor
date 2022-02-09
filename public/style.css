@@ -532,6 +532,10 @@ Ensure the default browser behavior of the `hidden` attribute.
   display: flex;
 }
 
+.hidden{
+  display: none;
+}
+
 .h-max{
   height: -webkit-max-content;
   height: -moz-max-content;
@@ -540,12 +544,6 @@ Ensure the default browser behavior of the `hidden` attribute.
 
 .h-10{
   height: 2.5rem;
-}
-
-.h-min{
-  height: -webkit-min-content;
-  height: -moz-min-content;
-  height: min-content;
 }
 
 .w-full{
@@ -562,14 +560,14 @@ Ensure the default browser behavior of the `hidden` attribute.
   width: max-content;
 }
 
-.w-10{
-  width: 2.5rem;
-}
-
 .w-min{
   width: -webkit-min-content;
   width: -moz-min-content;
   width: min-content;
+}
+
+.w-10{
+  width: 2.5rem;
 }
 
 .cursor-pointer{
@@ -629,11 +627,6 @@ Ensure the default browser behavior of the `hidden` attribute.
   border-color: hsl(211 10% 45% / var(--tw-border-opacity));
 }
 
-.border-black{
-  --tw-border-opacity: 1;
-  border-color: rgb(0 0 0 / var(--tw-border-opacity));
-}
-
 .bg-primary-lightBlue{
   --tw-bg-opacity: 1;
   background-color: hsl(239 57% 85% / var(--tw-bg-opacity));
@@ -666,9 +659,9 @@ Ensure the default browser behavior of the `hidden` attribute.
   padding: 0.75rem;
 }
 
-.py-2{
-  padding-top: 0.5rem;
-  padding-bottom: 0.5rem;
+.py-3{
+  padding-top: 0.75rem;
+  padding-bottom: 0.75rem;
 }
 
 .px-4{
@@ -681,14 +674,14 @@ Ensure the default browser behavior of the `hidden` attribute.
   padding-right: 1.25rem;
 }
 
+.py-2{
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+}
+
 .px-2{
   padding-left: 0.5rem;
   padding-right: 0.5rem;
-}
-
-.py-3{
-  padding-top: 0.75rem;
-  padding-bottom: 0.75rem;
 }
 
 .pl-5{
@@ -728,6 +721,10 @@ Ensure the default browser behavior of the `hidden` attribute.
   color: rgb(239 68 68 / var(--tw-text-opacity));
 }
 
+.opacity-0{
+  opacity: 0;
+}
+
 .card{
   position: relative;
   display: flex;
@@ -745,26 +742,26 @@ Ensure the default browser behavior of the `hidden` attribute.
     flex-direction: row-reverse;
   }
 
-  .sm\:top-7{
-    top: 1.75rem;
+  .sm\:top-5{
+    top: 1.25rem;
   }
 
   .sm\:bottom-auto{
     bottom: auto;
   }
 
-  .sm\:top-5{
-    top: 1.25rem;
+  .sm\:ml-\[6px\]{
+    margin-left: 6px;
+  }
+
+  .sm\:ml-10{
+    margin-left: 2.5rem;
   }
 
   .sm\:h-max{
     height: -webkit-max-content;
     height: -moz-max-content;
     height: max-content;
-  }
-
-  .sm\:w-auto{
-    width: auto;
   }
 
   .sm\:w-11\/12{
@@ -775,52 +772,16 @@ Ensure the default browser behavior of the `hidden` attribute.
     flex-direction: column;
   }
 
-  .sm\:items-center{
-    align-items: center;
-  }
-
-  .sm\:justify-center{
-    justify-content: center;
-  }
-
   .sm\:gap-3{
     gap: 0.75rem;
-  }
-
-  .sm\:gap-4{
-    gap: 1rem;
-  }
-
-  .sm\:gap-5{
-    gap: 1.25rem;
   }
 
   .sm\:p-4{
     padding: 1rem;
   }
 
-  .sm\:px-52{
-    padding-left: 13rem;
-    padding-right: 13rem;
-  }
-
-  .sm\:px-2{
-    padding-left: 0.5rem;
-    padding-right: 0.5rem;
-  }
-
-  .sm\:px-60{
-    padding-left: 15rem;
-    padding-right: 15rem;
-  }
-
   .sm\:px-72{
     padding-left: 18rem;
     padding-right: 18rem;
-  }
-
-  .sm\:py-0{
-    padding-top: 0px;
-    padding-bottom: 0px;
   }
 }

@@ -3,11 +3,13 @@ const mainContainer = document.querySelector(".main-container");
 const replySection = document.querySelector(".replySection");
 const imgCurrentUser = document.querySelector(".img-current-user");
 const btnSend = document.querySelector(".button-send");
-const comment = document.querySelector("#comment");
+const commentArea = document.querySelector(".comment-area");
+const commentText = document.querySelector("#comment");
 let currentId = 5;
 
 const addContent = function (
   id,
+  contentAtId,
   avatar,
   username,
   createdAt,
@@ -18,7 +20,7 @@ const addContent = function (
   to = null
 ) {
   const html = `
-  <div class="content-container flex flex-col gap-3" data-id=${id}>
+  <div class="content-container flex flex-col gap-3" data-id-content=${id} data-content-at-id=${contentAtId}>
     <div class="content flex flex-col gap-3">
       <div class="card">
         <!-- Content -->
@@ -31,9 +33,15 @@ const addContent = function (
               class="w-8"
             />
             <span class="username font-bold">${username}</span>
+            ${
+              currentUsername == username
+                ? `<span class="px-2 -ml-2 bg-primary-blue text-white text-sm"
+            >you</span`
+                : ""
+            }
             <span class="text-neutral-darkBlue h-max">${createdAt}</span>
           </div>
-          <p>
+          <p class="sm:w-11/12">
           ${
             replyingTo
               ? `<a class="text-primary-blue font-bold cursor-pointer">@${replyingTo} </a>`
@@ -45,16 +53,16 @@ const addContent = function (
         <!-- End Content -->
         <!-- Like/dislike -->
         <div
-          class="flex sm:flex-col gap-5 sm:gap-3 py-3 px-4 sm:p-4 w-max sm:h-max items-center bg-neutral-lightGray1 rounded-lg"
+          class="flex sm:flex-col items-center gap-5 sm:gap-3 py-3 px-4 sm:p-4 w-max sm:h-max bg-neutral-lightGray1 rounded-lg"
         >
-          <svg width="16" height="16" xmlns="http://www.w3.org/2000/svg" class="cursor-pointer">
+          <svg width="16" height="16" xmlns="http://www.w3.org/2000/svg" class="cursor-pointer sm:ml-[6px]">
             <path
               d="M6.33 10.896c.137 0 .255-.05.354-.149.1-.1.149-.217.149-.354V7.004h3.315c.136 0 .254-.05.354-.149.099-.1.148-.217.148-.354V5.272a.483.483 0 0 0-.148-.354.483.483 0 0 0-.354-.149H6.833V1.4a.483.483 0 0 0-.149-.354.483.483 0 0 0-.354-.149H4.915a.483.483 0 0 0-.354.149c-.1.1-.149.217-.149.354v3.37H1.08a.483.483 0 0 0-.354.15c-.1.099-.149.217-.149.353v1.23c0 .136.05.254.149.353.1.1.217.149.354.149h3.333v3.39c0 .136.05.254.15.353.098.1.216.149.353.149H6.33Z"
               fill="#C5C6EF"
             />
           </svg>
           <span>${score}</span>
-          <svg width="16" height="4" xmlns="http://www.w3.org/2000/svg" class="cursor-pointer">
+          <svg width="16" height="4" xmlns="http://www.w3.org/2000/svg" class="cursor-pointer sm:ml-[6px]">
             <path
               d="M9.256 2.66c.204 0 .38-.056.53-.167.148-.11.222-.243.222-.396V.722c0-.152-.074-.284-.223-.395a.859.859 0 0 0-.53-.167H.76a.859.859 0 0 0-.53.167C.083.437.009.57.009.722v1.375c0 .153.074.285.223.396a.859.859 0 0 0 .53.167h8.495Z"
               fill="#C5C6EF"
@@ -64,7 +72,7 @@ const addContent = function (
         <!-- End Like/dislike -->
         <!-- Button reply -->
         <div
-          class="btnShowReplySection flex items-center gap-2 sm:gap-5 absolute right-5 bottom-7 sm:top-5 sm:bottom-auto text-primary-blue font-bold"
+          class=" flex items-center gap-5 absolute right-5 bottom-7 sm:top-5 sm:bottom-auto text-primary-blue font-bold"
         >
         ${
           currentUsername == username
@@ -75,7 +83,7 @@ const addContent = function (
                 fill="#ED6368"
               />
             </svg>
-            <span class="text-red-500">Delete</span>
+            <span class="show-button-delete text-red-500">Delete</span>
           </div>
           <div class="flex items-center gap-1 cursor-pointer">
             <svg width="14" height="14" xmlns="http://www.w3.org/2000/svg">
@@ -84,7 +92,7 @@ const addContent = function (
                 fill="#5357B6"
               />
             </svg>
-            <span>edit</span>
+            <span class="show-button-edit">Edit</span>
           </div>`
             : `<div class="flex items-center gap-1 cursor-pointer">
             <svg width="14" height="13" xmlns="http://www.w3.org/2000/svg">
@@ -93,7 +101,7 @@ const addContent = function (
               fill="#5357B6"
             />
           </svg>
-          <span>Reply</span>
+          <span class="btnShowReplySection">Reply</span>
             </div>`
         }
         </div>
@@ -103,19 +111,24 @@ const addContent = function (
   </div>
   `;
 
+  // if we are not specified a 'to' parameter, then we return html text only
+  // It is used in showReply() function
   if (!to) return html;
+
+  // insert html as a last child of the 'to' element
   to.insertAdjacentHTML("beforeEnd", html);
 };
 
 const showReply = function (replies, idComment, currentUsername, to) {
   let html = `
   <div
-  class="flex flex-col gap-3 pl-5 border-l-2 border-neutral-grayBlue"
->
+  class="flex flex-col gap-3 sm:ml-10 pl-5 border-l-2 border-neutral-grayBlue"
+  >
   `;
 
   replies.forEach((reply) => {
     html += addContent(
+      reply.id,
       idComment,
       reply.user.image.png,
       reply.user.username,
@@ -131,11 +144,10 @@ const showReply = function (replies, idComment, currentUsername, to) {
   to.insertAdjacentHTML("beforeEnd", html);
 };
 
-const openReplySec = function (to) {
+const toggleReplyAndEdit = function (type, to, textValue = "") {
   const html = `
-  <!-- Add reply -->
   <div
-    class="replySection flex relative flex-col gap-6 bg-white rounded-lg p-5"
+    class="flex relative flex-col gap-6 bg-white rounded-lg p-5"
   >
     <textarea
       name="textReply"
@@ -144,21 +156,22 @@ const openReplySec = function (to) {
       rows="3"
       placeholder="Add a reply..."
       class="border-2 border-neutral-grayBlue rounded-lg resize-none p-3"
-    ></textarea>
+    >${textValue}</textarea>
     <img
-      src="images/avatars/image-maxblagun.png"
-      alt="max"
+      src=${resultData.currentUser.image.png}
+      alt="currentUser"
       class="w-10 h-10"
     />
     <span
-      class="btnAddReply absolute right-5 bottom-5 bg-primary-blue text-white px-5 py-2 w-max rounded-lg cursor-pointer"
-      >Reply</span
+      class="${
+        type == "reply" ? "btnAddReply" : "btnEdit"
+      } absolute right-5 bottom-5 bg-primary-blue text-white px-5 py-2 w-max rounded-lg cursor-pointer"
+      >${type == "reply" ? "Reply" : "Edit"}</span
     >
   </div>
-  <!-- End Add Reply -->
   `;
 
-  // delete element if already exist
+  // delete element if already exist or add as 'to' next sibling element if not exist yet
   if (to.nextElementSibling) to.nextElementSibling.remove();
   else to.insertAdjacentHTML("afterEnd", html);
 };
@@ -170,12 +183,12 @@ const resultData = await data.json();
 //Load View
 const loadView = function () {
   const { comments, currentUser } = resultData;
-  console.log(currentUser.username);
 
   // Show Comment
   if (comments.length <= 0) return;
   comments.forEach((c) => {
     addContent(
+      c.id,
       c.id,
       c.user.image.png,
       c.user.username,
@@ -205,14 +218,18 @@ const showBtnReply = function () {
   const btnsShowReply = mainContainer.querySelectorAll(".btnShowReplySection");
   btnsShowReply.forEach((btn) => {
     btn.addEventListener("click", function () {
-      openReplySec(this.parentElement);
+      toggleReplyAndEdit(
+        "reply",
+        this.parentElement.parentElement.parentElement
+      );
 
       // Add Reply
       if (!mainContainer.querySelector(".btnAddReply")) return;
       mainContainer
         .querySelector(".btnAddReply")
         .addEventListener("click", function (e) {
-          const idUser = +e.target.closest(".content-container").dataset.id;
+          const replyingInId =
+            +e.target.closest(".content-container").dataset.contentAtId;
           const replyContent = e.target.parentNode.firstElementChild.value;
           const replyingTo = e.target
             .closest(".content-container")
@@ -228,17 +245,92 @@ const showBtnReply = function () {
             user: resultData.currentUser,
           };
 
+          // Add reply to comment parent
           resultData.comments.forEach((c) => {
-            c.id === idUser && c.replies.push(newReply);
+            c.id === replyingInId && c.replies.push(newReply);
           });
           currentId++;
 
           //Update view (Delete child in main container, Then load again)
           mainContainer.innerHTML = "";
-          loadView(resultData);
+          initApp();
 
           //Close reply section
-          openReplySec(btn.parentElement);
+          toggleReplyAndEdit("reply", btn.parentElement);
+        });
+    });
+  });
+};
+
+const showBtnEdit = function () {
+  // Show Btn Reply
+  const btnsShowEdit = mainContainer.querySelectorAll(".show-button-edit");
+  btnsShowEdit.forEach((btn) => {
+    btn.addEventListener("click", function (e) {
+      const idContent =
+        +e.target.closest(".content-container").dataset.idContent;
+      const contentAtId =
+        +e.target.closest(".content-container").dataset.contentAtId;
+      let editingAt;
+
+      // Find Edited data
+      if (idContent == contentAtId) {
+        resultData.comments.forEach(
+          (c) => c.id == idContent && (editingAt = c)
+        );
+      } else {
+        resultData.comments.forEach((c) => {
+          if (c.id == contentAtId) {
+            c.replies.forEach((r) => r.id == idContent && (editingAt = r));
+          }
+        });
+      }
+
+      toggleReplyAndEdit(
+        "edit",
+        this.parentElement.parentElement.parentElement,
+        editingAt.content
+      );
+
+      if (!mainContainer.querySelector(".btnEdit")) return;
+      mainContainer
+        .querySelector(".btnEdit")
+        .addEventListener("click", function (e) {
+          const editContent = e.target.parentNode.firstElementChild.value;
+          // console.log(editContent);
+
+          if (!editContent) return;
+          const editedData = {
+            id: editingAt.id,
+            content: editContent,
+            createdAt: "today", //Need update
+            score: editingAt.score,
+            user: editingAt.user,
+          };
+
+          if (idContent == contentAtId) {
+            resultData.comments.forEach((c, index, arr) => {
+              if (c.id == idContent) {
+                editedData.replies = editingAt.replies;
+                arr[index] = editedData;
+              }
+            });
+          } else {
+            resultData.comments.forEach((c) => {
+              if (c.id == contentAtId) {
+                c.replies.forEach((r, index, arr) => {
+                  if (r.id == idContent) {
+                    editedData.replyingTo = editingAt.replyingTo;
+                    arr[index] = editedData;
+                  }
+                });
+              }
+            });
+          }
+          // end if
+          //Update view (Delete child in main container, Then load again)
+          mainContainer.innerHTML = "";
+          initApp();
         });
     });
   });
@@ -254,12 +346,14 @@ const initApp = function () {
   loadView();
   showBtnReply();
   showCurrentUser();
+  showBtnEdit();
+  commentArea.classList.remove("opacity-0");
 };
 initApp();
 
 // Add Comment
 btnSend.addEventListener("click", function () {
-  if (comment.value === "") return;
+  if (commentText.value === "") return;
 
   const newComment = {
     id: currentId,
@@ -270,15 +364,13 @@ btnSend.addEventListener("click", function () {
     replies: [],
   };
 
-  // Add data to JSON Object
+  // Add new data to Data Object
   resultData.comments.push(newComment);
   currentId++;
 
-  //Delete child in main container
+  //Delete child in main container, Then load again
   mainContainer.innerHTML = "";
-
-  //Then load again
-  loadView(resultData);
+  initApp();
 
   //clear textarea
   comment.value = "";

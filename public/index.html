@@ -22,7 +22,7 @@
       </div>
 
       <div
-        class="comment-area opacity-0 relative flex-col gap-6 bg-white rounded-lg p-5 sm:w-4/5 lg:w-3/5"
+        class="comment-area opacity-0 relative flex flex-col sm:flex-row sm:items-start gap-6 bg-white rounded-lg p-5 w-full sm:w-4/5 lg:w-3/5"
       >
         <textarea
           name="textComment"
@@ -30,11 +30,15 @@
           cols="30"
           rows="3"
           placeholder="Add a comment..."
-          class="border-2 w-full border-neutral-grayBlue rounded-lg resize-none p-3"
+          class="w-full border-2 border-neutral-grayBlue rounded-lg resize-none p-3 sm:order-2"
         ></textarea>
-        <img src="" alt="user image" class="w-10 h-10 img-current-user" />
+        <img
+          src=""
+          alt="user image"
+          class="w-10 h-10 img-current-user sm:order-1"
+        />
         <span
-          class="button-send absolute right-5 bottom-5 bg-primary-blue text-white px-5 py-2 w-max rounded-lg cursor-pointer"
+          class="button-send absolute sm:static right-5 bottom-5 bg-primary-blue text-white uppercase px-5 sm:px-7 py-2 sm:py-3 w-max rounded-lg cursor-pointer sm:order-3 hover:opacity-50"
           >Send</span
         >
       </div>

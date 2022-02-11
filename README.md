@@ -38,7 +38,7 @@ Objektif pada project ini:
 ### Links
 
 - Solution URL: [Solution Code](https://github.com/abimh66/interactive-comments-section-frontendmentor)
-- Live Site URL: [Live Site]()
+- Live Site URL: [Live Site](https://interactive-comments-abimh66.netlify.app/)
 
 ## Proses
 
